@@ -1,0 +1,46 @@
+:root{
+  --navy:#344A61; --navy2:#2A3B4E; --grey:#6D6F71; --light:#D9DBDC;
+  --accent:#6FC2B4; --bg:#F6F7F8; --card:#FFFFFF; --danger:#C0392B; --warn:#E67E22; --ok:#2E8B57;
+}
+*{box-sizing:border-box; margin:0; padding:0}
+body{
+  font-family:"Avenir Next","Nunito Sans","Segoe UI",sans-serif;
+  background:var(--bg); color:#22303E; line-height:1.6;
+}
+.header{background:var(--navy); padding:14px 24px; display:flex; align-items:center; gap:14px}
+.header img{height:44px}
+.header .tag{color:#D9DBDC; font-size:13px}
+.wrap{max-width:860px; margin:0 auto; padding:28px 18px 60px}
+.card{background:var(--card); border:1px solid var(--light); border-radius:14px; padding:22px; margin-bottom:18px; box-shadow:0 1px 3px rgba(52,74,97,.06)}
+h1{font-size:22px; color:var(--navy); margin-bottom:6px}
+h2{font-size:17px; color:var(--navy); margin:18px 0 8px}
+.muted{color:var(--grey); font-size:13.5px}
+.btn{display:inline-block; background:var(--navy); color:#fff; border:none; padding:11px 22px; border-radius:10px; font-size:15px; cursor:pointer; font-family:inherit}
+.btn:hover{background:var(--navy2)}
+.btn.accent{background:var(--accent); color:#12332E}
+.btn.ghost{background:#fff; color:var(--navy); border:1.5px solid var(--navy)}
+.btn:disabled{opacity:.5; cursor:not-allowed}
+input,select,textarea{width:100%; padding:10px 12px; border:1.5px solid var(--light); border-radius:10px; font-size:15px; font-family:inherit; margin-top:6px}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--accent); border-color:var(--accent)}
+label.q{display:block; padding:13px 15px; border:1px solid var(--light); border-radius:12px; margin-bottom:10px; cursor:pointer}
+label.q:hover{border-color:var(--accent)}
+label.q.sel{border-color:var(--navy); background:#EEF3F6}
+label.q .txt{display:block; font-size:15px; margin-bottom:7px}
+.opts{display:flex; flex-wrap:wrap; gap:7px}
+.opts span{font-size:12.5px; background:#fff; border:1.5px solid var(--light); padding:5px 11px; border-radius:8px; color:var(--grey)}
+label.q.sel .opts span{border-color:var(--light)}
+.opts span.on{background:var(--navy); color:#fff; border-color:var(--navy)}
+details{background:#fff; border:1px solid var(--light); border-radius:12px; margin-bottom:10px}
+details summary{padding:13px 16px; cursor:pointer; font-weight:600; color:var(--navy)}
+details .body{padding:0 16px 16px}
+table{width:100%; border-collapse:collapse; font-size:14px}
+th{background:var(--navy); color:#fff; padding:8px 10px; text-align:left; font-weight:600}
+td{padding:8px 10px; border-bottom:1px solid var(--light); vertical-align:top}
+.pill{display:inline-block; padding:3px 11px; border-radius:999px; font-size:12.5px; font-weight:700; color:#fff}
+.grid2{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+.scorebig{font-size:44px; font-weight:800; color:var(--navy)}
+@media(max-width:640px){.grid2{grid-template-columns:1fr}}
+.progress{height:9px; background:var(--light); border-radius:99px; overflow:hidden; margin:8px 0 16px}
+.progress div{height:100%; background:var(--accent); transition:width .2s}
+.center{text-align:center}
+.badge{display:inline-block; background:#EEF3F6; color:var(--navy); padding:4px 12px; border-radius:8px; font-size:13px; margin:0 6px 6px 0}
