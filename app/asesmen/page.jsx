@@ -1,10 +1,14 @@
 "use client";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { api } from "../../lib/api";
 import Radar from "../../components/Radar";
 
-export default function Asesmen() {
+export default function Page() {
+  return <Suspense fallback={<div className="card muted">Memuat…</div>}><AsesmenInner /></Suspense>;
+}
+
+function AsesmenInner() {
   const sp = useSearchParams();
   const tid = sp.get("t"); const code = sp.get("code") || "";
   const [cat, setCat] = useState(null); const [training, setTraining] = useState(null);
