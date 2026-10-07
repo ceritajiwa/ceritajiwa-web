@@ -16,6 +16,10 @@ export default function Home() {
       </div>
       {err && <div className="card"><b style={{color:"var(--danger)"}}>Gagal memuat:</b> {err}<br/><span className="muted">Periksa koneksi API (NEXT_PUBLIC_API_URL) atau tunggu server bangun ±30 detik lalu refresh.</span></div>}
       {trainings.map(t => <TrainingCard key={t.id} t={t} go={(page, code) => router.push(`/${page}?t=${t.id}&code=${encodeURIComponent(code)}`)} />)}
+      <p className="muted center" style={{marginTop:22}}>
+        <a href="/admin" style={{color:"var(--navy)", marginRight:16}}>🔐 Admin</a>
+        <a href="/bei" style={{color:"var(--navy)"}}>👨‍⚕️ Menu Trainer (BEI)</a>
+      </p>
     </>
   );
 }

@@ -1,3 +1,4 @@
+import "./globals.css";
 export const metadata = { title: "Asesmen & Ujian | Cerita Jiwa", description: "Platform asesmen EQ, ujian sertifikasi, dan sesi konseling Cerita Jiwa Training Center" };
 export default function RootLayout({ children }) {
   return (
