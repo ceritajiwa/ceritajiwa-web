@@ -1,41 +1,49 @@
 "use client";
-import { useEffect, useState, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { api } from "../../lib/api";
+import Gate from "../../components/Gate";
 
-export default function Page() {
-  return <Suspense fallback={<div className="card muted">Memuat…</div>}><UjianInner /></Suspense>;
-}
-
-function UjianInner() {
-  const sp = useSearchParams();
-  const tid = sp.get("t");
-  const [pkgs, setPkgs] = useState(null); const [err, setErr] = useState("");
-  const [pkg, setPkg] = useState(""); const [training, setTraining] = useState(null);
+export default function Ujian() {
+  const [pkgs, setPkgs] = useState(null);
+  const [trainings, setTrainings] = useState([]);
+  const [tid, setTid] = useState("");
+  const [ok, setOk] = useState(false); const [code, setCode] = useState("");
+  const [pkg, setPkg] = useState("");
+  const [err, setErr] = useState("");
   const [name, setName] = useState(""); const [email, setEmail] = useState("");
   const [answers, setAnswers] = useState({});
   const [result, setResult] = useState(null);
   useEffect(() => {
     Promise.all([api("/api/exam/packages"), api("/api/trainings")])
-      .then(([p, ts]) => { setPkgs(p); setTraining(ts.find(x => x.id === tid)); if (Object.keys(p).length) setPkg(Object.keys(p)[0]); })
+      .then(([p, ts]) => { setPkgs(p); setTrainings(ts); if (ts[0]) setTid(ts[0].id);
+        if (Object.keys(p).length) setPkg(Object.keys(p)[0]); })
       .catch(e => setErr(e.message));
-  }, [tid]);
+  }, []);
+  const training = trainings.find(x => x.id === tid);
   if (err) return <div className="card">⚠️ {err}</div>;
   if (!pkgs) return <div className="card muted">Memuat…</div>;
   const P = pkgs[pkg];
   if (!P) return <div className="card">Paket ujian tidak ditemukan.</div>;
+  if (!ok && training && training.access_code)
+    return <Gate title="🎓 Ujian Sertifikasi" subtitle={training.name} trainingId={tid}
+             onUnlock={c => { setCode(c); setOk(true); }} />;
   const questions = P.questions;
   const answered = Object.keys(answers).length;
-  const retry = result && !result.passed;
   return (
     <>
       <div className="card">
         <h1>🎓 Ujian Sertifikasi {training ? "— " + training.name : ""}</h1>
-        <p className="muted">40 soal • kelulusan minimal {P.passing} • boleh mengulang</p>
-        <label>Paket ujian</label>
-        <select value={pkg} onChange={e => { setPkg(e.target.value); setAnswers({}); setResult(null); }}>
-          {Object.entries(pkgs).map(([k, v]) => <option key={k} value={k}>{v.title}</option>)}
+        <label>Perusahaan / Training</label>
+        <select value={tid} onChange={e => { setTid(e.target.value); setAnswers({}); setResult(null); setOk(false); }}>
+          {trainings.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
         </select>
+        <div className="grid2" style={{marginTop:10}}>
+          <div><label>Paket ujian</label>
+            <select value={pkg} onChange={e => { setPkg(e.target.value); setAnswers({}); setResult(null); }}>
+              {Object.entries(pkgs).map(([k, v]) => <option key={k} value={k}>{v.title}</option>)}
+            </select></div>
+          <div className="muted" style={{alignSelf:"end"}}>40 soal • kelulusan minimal {P.passing} • boleh mengulang</div>
+        </div>
       </div>
       {result ? (
         <div className="card center">
@@ -43,7 +51,7 @@ function UjianInner() {
           <p>Benar {result.correct}/40 — <b style={{color: result.passed ? "var(--ok)" : "var(--danger)"}}>{result.passed ? "✅ LULUS" : "❌ BELUM LULUS"}</b></p>
           <div style={{marginTop:14, display:"flex", gap:10, justifyContent:"center", flexWrap:"wrap"}}>
             <button className="btn" onClick={() => { setAnswers({}); setResult(null); }}>🔁 Ulangi Ujian</button>
-            <a className="btn ghost" href="/" style={{textDecoration:"none"}}>Selesai</a>
+            <a className="btn ghost" href="/ujian" style={{textDecoration:"none"}}>Selesai</a>
           </div>
         </div>
       ) : (
@@ -82,7 +90,7 @@ function UjianInner() {
             onClick={async () => {
               try {
                 const r = await api("/api/exam/submit", { method: "POST", body: {
-                  training_id: tid, package: pkg, name, email, answers } });
+                  training_id: tid, package: pkg, name, email, access_code: code, answers } });
                 setResult(r); window.scrollTo(0,0);
               } catch (e) { alert(e.message); }
             }}>
